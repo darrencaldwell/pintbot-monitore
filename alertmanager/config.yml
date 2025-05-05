@@ -10,9 +10,11 @@ route:
 
 receivers:
   - name: 'discord'
-    webhook_configs:
-      - url: '${DISCORD_WEBHOOK_URL}'
+    discord_configs:
+      - webhook_url: 'http://example.com/placeholder-webhook'
         send_resolved: true
+        title: '{{ if eq .Status "firing" }}🔴{{ else }}🟢{{ end }} {{ .CommonLabels.alertname }}'
+        message: '{{ if eq .Status "firing" }}ALERT: {{ else }}RESOLVED: {{ end }}{{ .CommonLabels.domain }}'
 
 inhibit_rules:
   # Inhibit API alerts if the website is down
@@ -26,9 +28,6 @@ inhibit_rules:
   # This indicates our internet connection is likely down
   - source_match_re:
       target: 'cloudflare-dns'
-      status: 'down'  # This matches the metric value when 1.1.1.1 is down
+      status: 'down'
     target_match_re:
-      alertname: '(WebsiteDown|APIDown)'  # Only inhibit website and API alerts
-
-templates:
-  - '/etc/alertmanager/discord.tmpl'
+      alertname: '(WebsiteDown|APIDown)'

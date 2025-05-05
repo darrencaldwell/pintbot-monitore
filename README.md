@@ -153,9 +153,17 @@ The system sends recovery notifications when services come back online:
 ## Getting Started
 
 1. Clone this repository
-2. Copy `.env.example` to `.env` and set your Discord webhook URL
-3. Run `docker-compose up -d` to start all services
-4. Access Grafana at http://localhost:3000 (default credentials: admin/admin)
+2. Copy `.env.example` to `.env` and set your Discord webhook URL:
+   ```
+   cp .env.example .env
+   nano .env  # Edit to add your Discord webhook URL
+   ```
+3. Make the entrypoint script executable:
+   ```
+   chmod +x alertmanager/entrypoint.sh
+   ```
+4. Run `docker-compose up -d` to start all services
+5. Access Grafana at http://localhost:3000 (default credentials: admin/admin)
 
 ## Configuration Files
 

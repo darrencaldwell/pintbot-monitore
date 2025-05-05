@@ -43,6 +43,8 @@ services:
     volumes:
       - ./prometheus:/etc/prometheus
       - prometheus_data:/prometheus
+    ports:
+      - "9090:9090"
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
@@ -53,14 +55,21 @@ services:
       - monitoring_network
 
   alertmanager:
-    image: prom/alertmanager:latest
+    build:
+      context: ./alertmanager
+      dockerfile: build/Dockerfile
     container_name: api_alertmanager
     restart: unless-stopped
     volumes:
       - ./alertmanager:/etc/alertmanager
+    ports:
+      - "9093:9093"
     command:
       - '--config.file=/etc/alertmanager/config.yml'
       - '--storage.path=/alertmanager'
+      - '--web.external-url=http://localhost:9093'
+    environment:
+      - DISCORD_WEBHOOK_URL=${DISCORD_WEBHOOK_URL}
     networks:
       - monitoring_network
 
