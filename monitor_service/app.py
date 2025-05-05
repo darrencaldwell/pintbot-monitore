@@ -24,6 +24,7 @@ MYSQL_HOST = os.environ.get('MYSQL_HOST', 'mysql')
 MYSQL_USER = os.environ.get('MYSQL_USER', 'monitor')
 MYSQL_PASSWORD = os.environ.get('MYSQL_PASSWORD', 'monitorpass')
 MYSQL_DATABASE = os.environ.get('MYSQL_DATABASE', 'api_monitor')
+DISCORD_USER_ID = os.environ.get('DISCORD_USER_ID')
 
 # Monitoring targets
 PING_TARGETS = [
@@ -32,8 +33,8 @@ PING_TARGETS = [
 ]
 
 API_ENDPOINTS = [
-    {'name': 'all-pints-api', 'url': 'https://funkydiagrams.com/api/all_pints', 'type': 'api'},
-    {'name': 'user-pints-api', 'url': 'https://funkydiagrams.com/api/pints/1', 'type': 'api'}  # Example user_id=1
+    {'name': 'all-pints-api', 'url': 'https://funkydiagrams.com/pints/all_pints', 'type': 'api'},
+    {'name': 'user-pints-api', 'url': f"https://funkydiagrams.com/pints/pints/{DISCORD_USER_ID}", 'type': 'api'}
 ]
 
 def ping_host(target):

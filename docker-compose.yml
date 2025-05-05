@@ -15,6 +15,7 @@ services:
       - MYSQL_PASSWORD=monitorpass
       - MYSQL_DATABASE=api_monitor
       - DISCORD_WEBHOOK_URL=${DISCORD_WEBHOOK_URL}
+      - DISCORD_USER_ID=${DISCORD_USER_ID}
     volumes:
       - ./monitor_service:/app
     networks:
