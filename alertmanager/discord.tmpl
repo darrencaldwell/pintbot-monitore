@@ -1,0 +1,22 @@
+{{ define "discord.title" }}[{{ .Status | toUpper }}{{ if eq .Status "firing" }}:{{ .Alerts.Firing | len }}{{ end }}] {{ .CommonLabels.alertname }}{{ end }}
+
+{{ define "discord.message" }}
+{{ range .Alerts }}
+{{ if eq .Status "firing" }}🔴 **ALERT FIRING**{{ else }}🟢 **ALERT RESOLVED**{{ end }}
+
+{{ if eq .Labels.alertname "WebsiteDown" }}
+**Website Down Alert**
+The entire website ({{ .Labels.domain }}) has been down for over 5 minutes.
+{{ else if eq .Labels.alertname "APIDown" }}
+**API Down Alert**
+The API at {{ .Labels.domain }}/api is down, but the main website appears to be functioning.
+{{ end }}
+
+**Status:** {{ .Status | toUpper }}
+**Started:** {{ .StartsAt.Format "2006-01-02 15:04:05" }}
+{{ if eq .Status "resolved" }}**Resolved:** {{ .EndsAt.Format "2006-01-02 15:04:05" }}
+**Duration:** {{ duration .StartsAt .EndsAt }}{{ end }}
+
+{{ if .Annotations.description }}{{ .Annotations.description }}{{ end }}
+{{ end }}
+{{ end }}

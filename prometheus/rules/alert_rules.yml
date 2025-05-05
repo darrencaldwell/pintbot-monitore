@@ -1,0 +1,22 @@
+groups:
+  - name: api_monitoring
+    rules:
+      - alert: WebsiteDown
+        expr: endpoint_up{target=~".*website.*"} == 0
+        for: 5m
+        labels:
+          severity: critical
+          domain: "funkydiagrams.com"
+        annotations:
+          summary: "Website is down"
+          description: "The website {{ $labels.target }} has been down for more than 5 minutes."
+
+      - alert: APIDown
+        expr: endpoint_up{target=~".*api.*"} == 0
+        for: 5m
+        labels:
+          severity: critical
+          domain: "funkydiagrams.com"
+        annotations:
+          summary: "API is down"
+          description: "The API endpoint {{ $labels.target }} has been down for more than 5 minutes."

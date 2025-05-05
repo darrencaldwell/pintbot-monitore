@@ -1,0 +1,34 @@
+global:
+  resolve_timeout: 5m
+
+route:
+  group_by: ['alertname', 'domain']
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+  receiver: 'discord'
+
+receivers:
+  - name: 'discord'
+    webhook_configs:
+      - url: '${DISCORD_WEBHOOK_URL}'
+        send_resolved: true
+
+inhibit_rules:
+  # Inhibit API alerts if the website is down
+  - source_match:
+      alertname: 'WebsiteDown'
+    target_match:
+      alertname: 'APIDown'
+    equal: ['domain']
+    
+  # Inhibit all alerts if Cloudflare DNS (1.1.1.1) is down
+  # This indicates our internet connection is likely down
+  - source_match_re:
+      target: 'cloudflare-dns'
+      status: 'down'  # This matches the metric value when 1.1.1.1 is down
+    target_match_re:
+      alertname: '(WebsiteDown|APIDown)'  # Only inhibit website and API alerts
+
+templates:
+  - '/etc/alertmanager/discord.tmpl'
